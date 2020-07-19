@@ -1,0 +1,6 @@
+This app is created using Python Language. It's GUI is created using 'Tkinter'.
+The landing page shows the number of active, cured, deaths and migrated cases which is done by web scrapping 'MOHFW' website, i.e. Ministry of health and family welfare. The web scrapping is done using 'BeautifulSoup' library. We can also refresh the data. It also shows date and dynamic time using 'time', 'datetime' library. It also gives notification for 10 seconds after every 30 minutes which is done by importing 'plyer' library. It also has connectivity to the database. It will store cases of every date.
+One of it's module is 'Ask query from Doctor'. It will allow us to ask query from doctor through mail id (for the time being I have assigned my mail id as doctor's mail id). Mailer is built using 'smtplib' library. It has connectivity to the database. It will store the mail sent by the user in the database.
+Another module is 'View Data'. It will allow the user to view data by specifying date. Data will be retrieved from database. App also provides option of viewing calendar which is done by importing 'calendar' library.
+Another module is 'FAQ'. It will show the PDF of frequently asked question which is done by importing 'webbrowser' library.
+About me is also provided in the application.

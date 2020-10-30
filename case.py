@@ -22,7 +22,6 @@ except:
 
 
 # GLOBAL VARIABLES
-stuff=list()
 date = dt.datetime.now()
 format_date = f"{date:%a, %b %d %Y}"
 
@@ -37,33 +36,30 @@ def get_corona_detail_of_india():
     html_data = get_html_data(url)
 
     bs = bs4.BeautifulSoup(html_data.text, 'html.parser') # MAKING OF OBJECT
-    info_div = bs.find("div",class_="site-stats-count").find_all("li")
-    all_details = ""
-    for block in info_div:
-        try:
-            count = block.find("strong").get_text()
-            stuff.append(count)
-            text = block.find("span").get_text()
-            all_details = all_details + text +" : " + count + "\n"
-        except:
-            break
-    active=stuff[0]
-    cured=stuff[1]
-    deaths=stuff[2]
-    migrated=stuff[3]
-    # print(format_date, active, cured, deaths, migrated)
+    info_div1 = bs.find("li",class_="bg-blue").find_all('strong', class_="mob-hide")
+    active=info_div1[0].get_text()
+    active_no=info_div1[1].get_text().split()[0]
+    info_div2 = bs.find("li",class_="bg-green").find_all('strong', class_="mob-hide")
+    dis=info_div2[0].get_text()
+    dis_no=info_div2[1].get_text().split()[0]
+    info_div3 = bs.find("li",class_="bg-red").find_all('strong', class_="mob-hide")
+    death=info_div3[0].get_text()
+    death_no=info_div3[1].get_text().split()[0]
+    mig="1"
 
-    database.cur.execute('SELECT active FROM tracker WHERE cured= ?',(cured, ) )
+    all_details = active+" : "+active_no+"\n"+dis+" : "+dis_no+"\n"+death+" : "+death_no+"\n"+"Migrated : "+mig
+
+    database.cur.execute('SELECT active FROM tracker WHERE cured= ?',(dis_no, ) )
     row=database.cur.fetchone()
     if row is None:
         database.cur.execute('''INSERT OR IGNORE INTO tracker (date, active,cured,deaths,migrated)
-            VALUES ( ?, ?, ?, ?, ? )''', ( format_date, active, cured, deaths, migrated, ) )
+            VALUES ( ?, ?, ?, ?, ? )''', ( format_date, active_no, dis_no, death_no, mig, ) )
         database.conn.commit()
     else:
         yo=row[0]
-        if(yo!=int(active)):
+        if(yo!=int(active_no)):
             database.cur.execute('''INSERT OR IGNORE INTO tracker (date, active,cured,deaths,migrated)
-                VALUES ( ?, ?, ?, ?, ? )''', ( format_date, active, cured, deaths, migrated, ) )
+                VALUES ( ?, ?, ?, ?, ? )''', ( format_date, active_no, dis_no, death_no, mig, ) )
             database.conn.commit()
 
     return all_details
@@ -74,15 +70,19 @@ def get_corona_detail_of_india_noti():
     html_data = get_html_data(url)
 
     bs = bs4.BeautifulSoup(html_data.text, 'html.parser') # MAKING OF OBJECT
-    info_div = bs.find("div",class_="site-stats-count").find_all("li")
-    all_details = ""
-    for block in info_div:
-        try:
-            count = block.find("strong").get_text()
-            text = block.find("span").get_text()
-            all_details = all_details + text +" : " + count + "\n"
-        except:
-            break
+    info_div1 = bs.find("li",class_="bg-blue").find_all('strong', class_="mob-hide")
+    active=info_div1[0].get_text()
+    active_no=info_div1[1].get_text().split()[0]
+    info_div2 = bs.find("li",class_="bg-green").find_all('strong', class_="mob-hide")
+    dis=info_div2[0].get_text()
+    dis_no=info_div2[1].get_text().split()[0]
+    info_div3 = bs.find("li",class_="bg-red").find_all('strong', class_="mob-hide")
+    death=info_div3[0].get_text()
+    death_no=info_div3[1].get_text().split()[0]
+    mig="1"
+
+    all_details = active+" : "+active_no+"\n"+dis+" : "+dis_no+"\n"+death+" : "+death_no+"\n"+"Migrated : "+mig
+
     return all_details
 
 # FUNCTION TO DISPLAY NOTIFICATION
